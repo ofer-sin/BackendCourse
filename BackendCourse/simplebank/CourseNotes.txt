@@ -1,0 +1,55 @@
+// start the docker container
+docker start postgres17
+
+// launch a shell inside the docker container
+docker exec -it postgres17 bash
+
+// create a database
+createdb --username=root --owner=root simple_bank
+
+// access the database
+psql simple_bank
+
+// remove the database
+dropdb simple_bank
+
+// access the database inside the container using a makefile 
+see Makefile
+
+// create the database migrations
+migrate create -ext sql -dir db/migration -seq init_schema
+Copy the instructions into the 'up' file
+Add instructions to drop the table in the 'down' file
+Add relevant targets to Makefile
+
+// CRUD
+- Basic option is to use directly in the code with db.QueryRowContext
+  It's tedious and buggy, all mappings need to be done manually
+  But it's fast
+- A safer way is to use GORM (www.gorm.io)
+  Slow on high load
+- SQLX
+  A middleway library, runs fast and easy to use but errors will occur only on runtime
+- SQLC (sqlc.dev)
+  Automatically generates Go code from SQL queries
+  Supposrts on Postgres
+
+// Using SQLC library
+- Create a yaml file
+- Add a query in the query folder (account.sql) for crerating an account (CreateAccount). 
+  Examples in: https://docs.sqlc.dev/en/latest/tutorials/getting-started-postgresql.html
+  Make sure to add the "RETURNING *" to the query
+- Run "sqlc generate": 3 files are generated:
+    - models.go - Code with the database schema in go structs
+    - accounts.sql.go - Code with the operations from query/account.sql
+    - db.go - Code with DBTX interface 
+
+- Run: 
+    go mod init github.com/techschool/simplebank, to create go.mod
+    go mod tidy - to install 
+    
+- Add .sql files for entries and transfers and run "make sqlc" to generate go code for them
+
+// Create a targets
+- create accouts_test.go
+
