@@ -16,4 +16,9 @@ migratedown:
 sqlc:
 	 sqlc generate verbose
 
+test:
+	 go test -v -cover ./...
+#	 go tool cover -html=coverage.out -o coverage.html
+#	 go tool cover -func=coverage.out
+
 .PHONY: postgres createdb dropdb migrateup migratedown sqlc

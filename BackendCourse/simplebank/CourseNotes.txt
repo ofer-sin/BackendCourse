@@ -50,6 +50,6 @@ Add relevant targets to Makefile
     
 - Add .sql files for entries and transfers and run "make sqlc" to generate go code for them
 
-// Create a targets
+// Create a test
 - create accouts_test.go
 
