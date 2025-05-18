@@ -125,3 +125,65 @@ func TestTransferTx(t *testing.T) {
 
 	fmt.Println("After Tx: ", updatedAccount1.Balance, updatedAccount2.Balance)
 }
+
+func TestTransferTxDeadLock(t *testing.T) {
+	store := NewStore(testDB)
+	account1 := CreateRandomAccount(t)
+	account2 := CreateRandomAccount(t)
+
+	fmt.Println("Before Tx: ", account1, account2)
+
+	// run concurrent transfer transactions
+	n := 10
+	amount := int64(10)
+
+	// create channels to handle errors and results
+	errsChannel := make(chan error)
+
+	for i := 0; i < n; i++ {
+		// give every goroutine a name
+		// this is just for debugging purposes
+		// txName := fmt.Sprintf("tx-%d", i+1)
+		// switch between the two accounts in each iteration
+		// this will create a deadlock if the two transactions are running concurrently
+		// and trying to lock the same two accounts in different order
+		fromAccountID := account1.ID
+		toAccountID := account2.ID
+
+		if i%2 == 1 {
+			fromAccountID = account2.ID
+			toAccountID = account1.ID
+		}
+		go func() {
+			// add the transaction name to the context
+			// ctx := context.WithValue(context.Background(), txKey, txName)
+			ctx := context.Background()
+			_, err := store.TransferTx(ctx, TransferTxParams{
+				FromAccountID: fromAccountID,
+				ToAccountID:   toAccountID,
+				Amount:        amount,
+			})
+			errsChannel <- err
+		}()
+	}
+
+	for i := 0; i < n; i++ {
+		// get the error and result from the channels
+		// this will block until a value is sent to the channel
+		err := <-errsChannel
+		require.NoError(t, err)
+
+	}
+
+	// check the final updated balances
+	updatedAccount1, err := store.GetAccount(context.Background(), account1.ID)
+	require.NoError(t, err)
+
+	updatedAccount2, err := store.GetAccount(context.Background(), account2.ID)
+	require.NoError(t, err)
+
+	require.Equal(t, account1.Balance, updatedAccount1.Balance)
+	require.Equal(t, account2.Balance, updatedAccount2.Balance)
+
+	fmt.Println("After Tx: ", updatedAccount1.Balance, updatedAccount2.Balance)
+}
