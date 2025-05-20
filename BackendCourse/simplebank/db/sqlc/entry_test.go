@@ -4,8 +4,9 @@ import (
 	"context"
 	"testing"
 
+	"simplebank/util"
+
 	"github.com/stretchr/testify/require"
-	"github.com/techschool/simplebank/util"
 )
 
 func CreateRandomEntry(t *testing.T, accountId int64) Entries {
