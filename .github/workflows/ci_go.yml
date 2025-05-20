@@ -12,11 +12,32 @@ on:
 jobs:
 
   build:
+    name: Build and Test
     runs-on: ubuntu-latest
-    steps:
-    - name: Print working directory
-      run: pwd
 
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres:17
+        # Provide the password for postgres
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: secret
+          POSTGRES_DB: simple_bank
+        ports:
+          # Expose the port to the host
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+ 
     - uses: actions/checkout@v4
 
     - name: Set up Go
@@ -26,6 +47,27 @@ jobs:
 
     - name: Build
       run: go build -v ./...
+      working-directory: ./BackendCourse/simplebank
+
+    - name: Install golang-migrate
+      run: 
+        curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.3/migrate.linux-amd64.tar.gz | tar xvz
+        sudo mv migrate /usr/local/bin/
+        which migrate
+        # Alternatively, you can use the following commands to install golang-migrate
+        # go get -u github.com/golang-migrate/migrate/v4
+        # go get -u github.com/golang-migrate/migrate/v4/cmd/migrate
+        # OR the bellow 5 commands
+        # go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+        # curl -L https://packagecloud.io/golang-migrate/migrate/gpgkey | apt-key add -
+        # echo "deb https://packagecloud.io/golang-migrate/migrate/ubuntu/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/migrate.list
+        # apt-get update
+        # apt-get install -y migrate    
+        
+  
+
+    - name: Run Migrations
+      run: make migrateup
       working-directory: ./BackendCourse/simplebank
 
     - name: Test
