@@ -12,11 +12,29 @@ on:
 jobs:
 
   build:
+    name: Build and Test
     runs-on: ubuntu-latest
-    steps:
-    - name: Print working directory
-      run: pwd
 
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres:17
+        # Provide the password for postgres
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: secret
+          POSTGRES_DB: simple_bank
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+ 
     - uses: actions/checkout@v4
 
     - name: Set up Go
@@ -28,6 +46,10 @@ jobs:
       run: go build -v ./...
       working-directory: ./BackendCourse/simplebank
 
+    - name: Run Migrations
+      run: make migrateup
+      working-directory: ./BackendCourse/simplebank
+      
     - name: Test
       run: make test
       working-directory: ./BackendCourse/simplebank
