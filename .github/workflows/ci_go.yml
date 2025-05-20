@@ -50,21 +50,10 @@ jobs:
       working-directory: ./BackendCourse/simplebank
 
     - name: Install golang-migrate
-      run: 
+      run: |
         curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.3/migrate.linux-amd64.tar.gz | tar xvz
         sudo mv migrate /usr/local/bin/
-        which migrate
-        # Alternatively, you can use the following commands to install golang-migrate
-        # go get -u github.com/golang-migrate/migrate/v4
-        # go get -u github.com/golang-migrate/migrate/v4/cmd/migrate
-        # OR the bellow 5 commands
-        # go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
-        # curl -L https://packagecloud.io/golang-migrate/migrate/gpgkey | apt-key add -
-        # echo "deb https://packagecloud.io/golang-migrate/migrate/ubuntu/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/migrate.list
-        # apt-get update
-        # apt-get install -y migrate    
-        
-  
+        which migrate     
 
     - name: Run Migrations
       run: make migrateup
