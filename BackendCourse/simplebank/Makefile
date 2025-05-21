@@ -21,4 +21,7 @@ test:
 #	 go tool cover -html=coverage.out -o coverage.html
 #	 go tool cover -func=coverage.out
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc
+server:
+	 go run main.go
+
+.PHONY: postgres createdb dropdb migrateup migratedown sqlc server test
