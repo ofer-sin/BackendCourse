@@ -56,4 +56,14 @@ Add relevant targets to Makefile
 // Wrap updates inside a trtansaction
 - Create a transaction in store.go and a test in store_test.go
 
+// Create CI in github with a github workflow using a yaml file
+
+// Create a web server with RESTfull API using gin
+
+// Add config file with Viper
+
+
+
+
+
 
