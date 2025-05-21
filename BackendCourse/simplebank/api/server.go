@@ -23,7 +23,8 @@ func NewServer(store *db.Store) *Server {
 	// This sets up an HTTP POST endpoint at /accounts.
 	// When a POST request is made to /accounts, with the createAccount method of the server as handler.
 	router.POST("/accounts", server.createAccount)
-	router.GET("/accounts/:id", server.getAccount)
+	router.GET("/accounts/:id", server.getAccount) // the ':' indicates a uri (path) parameter
+	router.GET("/accounts", server.listAccounts)
 
 	return server
 }

@@ -23,6 +23,10 @@ func (server *Server) createAccount(ctx *gin.Context) {
 	// and validate the input
 	// If the binding fails, return a 400 Bad Request response
 	// with the error message
+
+	// ShouldBindJSON(): This method binds JSON data from the request body to a struct.
+	// It is useful when handling requests where the client sends data in JSON format,
+	// such as in a POST or PUT request.
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
@@ -45,6 +49,8 @@ func (server *Server) createAccount(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, account)
 }
 
+// define the uri parameter
+// example: http://localhost:8080/1 - where the '1' is the id of the account
 type GetAccountRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
@@ -60,6 +66,10 @@ func (server *Server) getAccount(ctx *gin.Context) {
 	// and validate the input
 	// If the binding fails, return a 400 Bad Request response
 	// with the error message
+
+	// ShouldBindUri(): This method binds URI parameters from the request URL to a struct.
+	// It is useful when handling requests where the client sends data in the URL,
+	// such as in a GET request with path parameters
 	if err := ctx.ShouldBindUri(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
@@ -79,4 +89,43 @@ func (server *Server) getAccount(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, account)
+}
+
+type ListAccountRequest struct {
+	PageID   int32 `form:"page_id" binding:"required,min=1"`
+	PageSize int32 `form:"page_size" binding:"required,min=5,max=20"`
+}
+
+// This is one API handler function that handles the retrieval of a list of accounts.
+// It is called when a GET request is made to the /accounts endpoint.
+// The handler was set by the router in the NewServer function by calling:
+// router.GET("/accounts", server.listAccount)
+func (server *Server) listAccounts(ctx *gin.Context) {
+	var req ListAccountRequest
+	// Bind URI request to the ListAccountRequest struct
+	// and validate the input
+	// If the binding fails, return a 400 Bad Request response
+	// with the error message
+
+	// ShouldBindQuery(): This method binds query parameters from the request URL to a struct.
+	// It is useful when handling requests where the client sends data in the URL query string
+	// example: http://localhost:8080/accounts?page_id=1&page_size=5
+	if err := ctx.ShouldBindQuery(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	arg := db.ListAccountsParams{
+		Limit:  req.PageSize,
+		Offset: (req.PageID - 1) * req.PageSize, // translate page size and page id to offset
+	}
+
+	// Call the store to get the list of accounts from the database
+	accounts, err := server.store.ListAccounts(ctx, arg)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, accounts)
 }
