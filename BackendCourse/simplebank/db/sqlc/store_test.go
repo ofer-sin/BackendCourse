@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -13,7 +12,7 @@ func TestTransferTx(t *testing.T) {
 	account1 := CreateRandomAccount(t)
 	account2 := CreateRandomAccount(t)
 
-	fmt.Println("Before Tx: ", account1, account2)
+	// fmt.Println("Before Tx: ", account1, account2)
 
 	// run concurrent transfer transactions
 	n := 5
@@ -51,11 +50,8 @@ func TestTransferTx(t *testing.T) {
 		transactionResult := <-resultsChannel
 		require.NotEmpty(t, transactionResult)
 
-		fmt.Println("Transaction FromAccount: ", transactionResult.FromAccount)
-		fmt.Println("Transaction ToAccount: ", transactionResult.ToAccount)
-		// fmt.Println("Transaction FromAccount: ", transactionResult.Transfer.FromAccountID)
-		// fmt.Println("Transaction FromAccount: ", transactionResult.T)
 		// fmt.Println("Transaction FromAccount: ", transactionResult.FromAccount)
+		// fmt.Println("Transaction ToAccount: ", transactionResult.ToAccount)
 
 		// check trtansfer
 		transfer := transactionResult.Transfer
@@ -99,7 +95,7 @@ func TestTransferTx(t *testing.T) {
 		require.Equal(t, account2.ID, toAccount.ID)
 
 		// check account balances
-		fmt.Println("Tx Balance: ", fromAccount.Balance, toAccount.Balance)
+		// fmt.Println("Tx Balance: ", fromAccount.Balance, toAccount.Balance)
 		diff1 := account1.Balance - fromAccount.Balance // ammont deducted from account1
 		diff2 := toAccount.Balance - account2.Balance   // amount added to account2
 		require.Equal(t, diff1, diff2)
@@ -123,7 +119,7 @@ func TestTransferTx(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, account2.Balance+int64(n)*amount, updatedAccount2.Balance)
 
-	fmt.Println("After Tx: ", updatedAccount1.Balance, updatedAccount2.Balance)
+	// fmt.Println("After Tx: ", updatedAccount1.Balance, updatedAccount2.Balance)
 }
 
 func TestTransferTxDeadLock(t *testing.T) {
@@ -131,7 +127,7 @@ func TestTransferTxDeadLock(t *testing.T) {
 	account1 := CreateRandomAccount(t)
 	account2 := CreateRandomAccount(t)
 
-	fmt.Println("Before Tx: ", account1, account2)
+	// fmt.Println("Before Tx: ", account1, account2)
 
 	// run concurrent transfer transactions
 	n := 10
@@ -185,5 +181,5 @@ func TestTransferTxDeadLock(t *testing.T) {
 	require.Equal(t, account1.Balance, updatedAccount1.Balance)
 	require.Equal(t, account2.Balance, updatedAccount2.Balance)
 
-	fmt.Println("After Tx: ", updatedAccount1.Balance, updatedAccount2.Balance)
+	// fmt.Println("After Tx: ", updatedAccount1.Balance, updatedAccount2.Balance)
 }
