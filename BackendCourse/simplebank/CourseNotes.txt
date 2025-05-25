@@ -84,6 +84,18 @@ Add relevant targets to Makefile
 - Add the opposite migration commands to the down migration file
 - Add a new make target: migratedown1 to migrate down only the last migration
 
+// 18: Add Golang code for the users table
+- Create users.sql with CreateUser and GetUser queries and run "make sqlc" -->
+- Table usesrs is added to models.go and a new file users.sql.go is created.
+- Write a test in user_test.go
+- Run "make mock" to update the store.go mock with the new API
+- Update accounts_test.go to use en existing user instead of a random user.
+- Update other files accordingly
+- Run "make test" to run the all the tests and make sure all tests pass
+
+
+
+
 
 
 

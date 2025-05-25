@@ -13,11 +13,13 @@ type Querier interface {
 	CreateAccount(ctx context.Context, arg CreateAccountParams) (Accounts, error)
 	CreateEntry(ctx context.Context, arg CreateEntryParams) (Entries, error)
 	CreateTransfer(ctx context.Context, arg CreateTransferParams) (Transfers, error)
+	CreateUser(ctx context.Context, arg CreateUserParams) (Users, error)
 	DeleteAccount(ctx context.Context, id int64) error
 	GetAccount(ctx context.Context, id int64) (Accounts, error)
 	GetAccountForUpdate(ctx context.Context, id int64) (Accounts, error)
 	GetEntry(ctx context.Context, id int64) (Entries, error)
 	GetTransfer(ctx context.Context, id int64) (Transfers, error)
+	GetUser(ctx context.Context, username string) (Users, error)
 	// Tell SQL that Key is not updated in this transaction
 	ListAccounts(ctx context.Context, arg ListAccountsParams) ([]Accounts, error)
 	// This query retrieves a list of entries from the "entries" table that belong to a specific account (filtered by account_id).

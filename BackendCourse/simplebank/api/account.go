@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
+	"github.com/lib/pq"
 	db "github.com/ofer-sin/Courses/BackendCourse/simplebank/db/sqlc"
 
 	"github.com/gin-gonic/gin"
@@ -43,6 +44,13 @@ func (server *Server) createAccount(ctx *gin.Context) {
 	// Call the store to create the account in the database
 	account, err := server.store.CreateAccount(ctx, arg)
 	if err != nil {
+		if pqErr, ok := err.(*pq.Error); ok {
+			switch pqErr.Code.Name() {
+			case "foreign_key_violation", "unique_violation":
+				ctx.JSON(http.StatusForbidden, errorResponse(err))
+				return
+			}
+		}
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}

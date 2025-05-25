@@ -53,4 +53,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/ofer-sin/Courses/BackendCourse/simplebank => .
+replace github.com/ofer-sin/Courses/BackendCourse/simplebank => ./
