@@ -62,7 +62,7 @@ Add relevant targets to Makefile
 
 // Add config file with Viper
 
-// Add a Mock DB with mockgen
+// 15: Add a Mock DB with mockgen
 - Change the Store to an interface
 - Change emit_interface setting in sqol.yaml to true and run "make sqlc" to generate "Querier.go" with the interface
 - Create "db/mock" folder
@@ -70,6 +70,23 @@ Add relevant targets to Makefile
   mockgen -destination db/mock/store.go -package mockdb github.com/ofer-sin/Courses/BackendCourse/simplebank/db/sqlc Store
   --> a new file db/mock/store.go is created with implementations for the mock db store
   --> Create account_test.go inside api folder and test with the mock store
+
+// 16: IMplement the transfer money API
+
+// 17: Add Users table
+- Add users table in dbdiagram.io and export to Postgresql
+- Create a new migration: "migrate create -ext sql -dir db/migration -seq add_users"
+- Add the new code from the exported code to the newly created 'up' migration file
+- Running "make migrateup" will fail because the existing account owners do not reffer to any existing username
+  because there are no users yet.
+- Run "make migratedown" to delete the existing data AFTER manualy updating the dirty flag to false
+- Re-run "make migrateup" to regenerate the tables and the indexes
+- Add the opposite migration commands to the down migration file
+- Add a new make target: migratedown1 to migrate down only the last migration
+
+
+
+
 
 
 
