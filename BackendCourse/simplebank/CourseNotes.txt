@@ -93,6 +93,30 @@ Add relevant targets to Makefile
 - Update other files accordingly
 - Run "make test" to run the all the tests and make sure all tests pass
 
+// SKIP a few lessons
+
+// 25: Create a Dockerfile for the app to be deployed to the cloud
+- 
+
+// 26: Handle docker network issues
+- We now have two separate docker containers (the app and psodgres server).
+  Run "docker container inspect" on the two contaners - they have different IP addresses, so we cannot
+  use localhost to connect from simplebank container to postgres container, so we need to override the localhost
+  set in app.env:
+  - docker run --name simplebank -p 8080:8080 -e  GIN_MODE=release -e "DB_SOURCE=postgresql://root:secret@172.17.0.2:5432/simple_bank?sslmode=disable"  simplebank:latest
+- This is not ideal because the IP address can change.
+  Running "docker network ls" shows the networks of the containers (bridge).
+  Running "docker network inspect bridge" will display information on the bridge network.
+  In the "Containers": block we can both containers. ontainers running under same network can discover each other by te name
+  but it doesn't work under the default "bridge" network so we need to create a new network for the containers:
+  - docker network create bank-network
+  - docker network connect bank-network postgres17
+  - docker network inspect bank-network - will show that posgres17 container beolongs to this network
+  - rerun the simplebank container while connecting it to the new network, and replacing the IP address with the posgres17 container name:
+    - docker run --name simplebank --network bank-network -p 8080:8080 -e  GIN_MODE=release -e "DB_SOURCE=postgresql://root:secret@posgres17:5432/simple_bank?sslmode=disable"  simplebank:latest
+  - Updade the makefile to connect the posgres17 container to the new newtwork
+
+
 
 
 

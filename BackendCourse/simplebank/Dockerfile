@@ -9,9 +9,10 @@ RUN go build -o main main.go
 FROM alpine:3.21
 WORKDIR /app
 COPY --from=builder /app/main .
+COPY app.env .
 
 # espose the port the app runs on
 EXPOSE 8080
 
 # run the executable
-CMD ["./app/main"]
+CMD ["/app/main"]
