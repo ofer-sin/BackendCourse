@@ -1,6 +1,6 @@
 module github.com/ofer-sin/Courses/BackendCourse/simplebank
 
-go 1.23
+go 1.21.0
 
 toolchain go1.24.2
 
