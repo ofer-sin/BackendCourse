@@ -95,6 +95,12 @@ Add relevant targets to Makefile
 
 // SKIP a few lessons
 
+// Add a create-user api
+
+// 22: Create and cerify a PASETO token
+
+// 23: Implement user login that returns a PASETO token
+
 // 25: Create a Dockerfile for the app to be deployed to the cloud
 - 
 
@@ -119,6 +125,9 @@ Add relevant targets to Makefile
 // 27: Configuring docker compose
 - Create docker-compose.yaml
 - Run: "docker compose up" to build the images and run the containers
+- RUN: "docker compose down" to rbring down the containers
+
+
 
 
 
