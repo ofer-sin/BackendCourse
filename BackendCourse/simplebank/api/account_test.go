@@ -106,7 +106,7 @@ func TestGetAccountAPI(t *testing.T) {
 			tc.buildStubs(store)
 
 			// Create a new server with the mock store
-			server := NewServer(store)
+			server := newTestServer(t, store)
 
 			// Create a new HTTP request to the /accounts/:id endpoint
 			// Create a new HTTP recorder to capture the response

@@ -1,47 +1,32 @@
-# services:
-#   postgres:
-#     image: postgres:17-alpine
-#     environment:
-#       - POSTGRES_USER=root
-#       - POSTGRES_PASSWORD=secret
-#       - POSTGRES_DB=simple_bank
-#   api:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile
-#     ports:
-#       - "8080:8080"
-#     depends_on:
-#       - postgres
-#     environment:
-#       - DB_SOURCE=postgresql://root:secret@postgres:5432/simple_bank?sslmode=disable
-#     entrypoint: [ "/app/wait-for.sh postgres:5432", "--", "/app/start.sh" ]
-#     command: [ "/app/main" ]
-
-
 services:
+  # The 'postgres' service runs a PostgreSQL database using the official image.
   postgres:
     image: postgres:17-alpine
     environment:
+      # Set up the database user, password, and initial database name.
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=secret
       - POSTGRES_DB=simple_bank
     ports:
-      - "5432:5432"  # Added for debugging if needed
+      - "5432:5432"  # Expose port for development purposes only, avoid in production
     healthcheck:
+      # Health check ensures the database is ready before dependent services start.
       test: ["CMD-SHELL", "pg_isready -U root -d simple_bank"]
       interval: 10s
       timeout: 5s
       retries: 5
 
+  # The 'api' service builds the backend application from the local Dockerfile.
   api:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8080:8080"  # Expose the API service on port 8080.
     depends_on:
       postgres:
+        # Ensure 'api' only starts after 'postgres' passes its health check.
         condition: service_healthy  # Wait for postgres to be healthy
     environment:
+      # Connection string for the API to connect to the Postgres database.
       - DB_SOURCE=postgresql://root:secret@postgres:5432/simple_bank?sslmode=disable
