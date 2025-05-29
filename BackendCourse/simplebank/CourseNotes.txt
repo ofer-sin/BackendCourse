@@ -99,7 +99,7 @@ Add relevant targets to Makefile
 - 
 
 // 26: Handle docker network issues
-- We now have two separate docker containers (the app and psodgres server).
+- We now have two separate docker containers (the app and postgres server).
   Run "docker container inspect" on the two contaners - they have different IP addresses, so we cannot
   use localhost to connect from simplebank container to postgres container, so we need to override the localhost
   set in app.env:
@@ -116,6 +116,9 @@ Add relevant targets to Makefile
     - docker run --name simplebank --network bank-network -p 8080:8080 -e  GIN_MODE=release -e "DB_SOURCE=postgresql://root:secret@posgres17:5432/simple_bank?sslmode=disable"  simplebank:latest
   - Updade the makefile to connect the posgres17 container to the new newtwork
 
+// 27: Configuring docker compose
+- Create docker-compose.yaml
+- Run: "docker compose up" to build the images and run the containers
 
 
 
