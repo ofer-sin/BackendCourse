@@ -20,7 +20,8 @@ func NewServer(store db.Store) *Server {
 	server := &Server{store: store, router: router}
 
 	// Set up routes
-	// When a request is made to /accounts, with the indicated handler method of the server is called
+	// When a request is made, the indicated handler method of the server is called
+	router.POST("/users", server.createUser) // the ':' indicates a uri (path) parameter
 	router.POST("/accounts", server.createAccount)
 	router.GET("/accounts/:id", server.getAccount) // the ':' indicates a uri (path) parameter
 	router.GET("/accounts", server.listAccounts)
