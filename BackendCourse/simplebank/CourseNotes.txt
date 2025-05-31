@@ -127,6 +127,9 @@ Add relevant targets to Makefile
 - Run: "docker compose up" to build the images and run the containers
 - RUN: "docker compose down" to rbring down the containers
 
+// 29: Auto build and push the docker image to AWS
+- Create ECR (Elastic Container Repository) 
+- Create a github Action  
 
 
 
