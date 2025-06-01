@@ -127,6 +127,13 @@ Add relevant targets to Makefile
 - Run: "docker compose up" to build the images and run the containers
 - RUN: "docker compose down" to rbring down the containers
 
+// 29: Deploy docker image to AWS
+- Create ECR in AWS
+- Rename ci_go.yml to test.yml
+- Create deploy.yml based on GitHub action Amazon ECR login (in GitHub market place)
+- Create IAM User (Idendity Access Management) in AWS 
+
+
 
 
 
