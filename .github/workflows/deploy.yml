@@ -14,6 +14,10 @@ jobs:
     name: Build image for aws
     runs-on: ubuntu-latest
 
+    permissions:
+      # The permissions for the ECR repository
+      id-token: write
+      contents: read
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -21,7 +25,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4 # More information on this action can be found below in the 'AWS Credentials' section
         with:
-          role-to-assume: arn:aws:iam::226695652070:user/github-ci:role/github-actions-ecr-push
+          role-to-assume: arn:aws:iam::226695652070:role/github-actions-ecr-push
           aws-region: eu-central-1
 
       - name: Login to Amazon ECR
