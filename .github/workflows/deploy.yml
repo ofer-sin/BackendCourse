@@ -37,9 +37,11 @@ jobs:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: backendcourse
           IMAGE_TAG: ${{ github.sha }}
+
         run: |
           cd BackendCourse/simplebank
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          aws ecr describe-repositories --repository-names $REPOSITORY || aws ecr create-repository --repository-name $REPOSITORY        
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
 
