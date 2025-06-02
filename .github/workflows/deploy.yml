@@ -32,6 +32,12 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Create ECR repository if it doesn't exist
+        env:
+         REPOSITORY: backendcourse
+        run: |
+         aws ecr describe-repositories --repository-names $REPOSITORY || aws ecr create-repository --repository-name $REPOSITORY
+
       - name: Build, tag, and push docker image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -41,7 +47,6 @@ jobs:
         run: |
           cd BackendCourse/simplebank
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          aws ecr describe-repositories --repository-names $REPOSITORY || aws ecr create-repository --repository-name $REPOSITORY        
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
 
