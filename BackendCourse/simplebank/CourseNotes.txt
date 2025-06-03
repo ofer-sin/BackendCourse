@@ -133,10 +133,12 @@ Add relevant targets to Makefile
 - Create deploy.yml based on GitHub action Amazon ECR login (in GitHub market place)
 - Create IAM User (Idendity Access Management) in AWS and attach policies for pushing docker images
 
-// 30/31: Create AWS RDS database
+// 30: Create AWS RDS database
 - Create RDS database  (password: 6kL1BNcWxdpOUqzO96MJ)
 - Update the migration targets in Makefile to point to AWS database and run "make migrateup" to populate the tables
 - Change DB_SOURCE env in app.env to point to the AWS database
+
+// 31: Create a secret in AWS to store app.env and retreive during deploymment
 - Create a secret in AWS Secret Manager to store the environment valriable of app.env
   - Create a new token symetric key by: openssl rand -hex 64| head -c 32
 - Run "aws configure" to alow using aws cli commands and take credentials from the AWS github-ci user
@@ -154,6 +156,14 @@ Add relevant targets to Makefile
 - And to get rid of the quotes:  jq -r 'to_entries|map("\(.key)=\(.value)")|.[]'
 - Redirect the output tp app.env to populate it with the required setting
 - Add this step to the github workflow deploy.yml
+- Pull the docker image from AWS registry to test it:
+  - login to AWS ECR registry: 
+    aws ecr get-login-password|docker login --username AWS --password-stdin 226695652070.dkr.ecr.eu-central-1.amazonaws.com
+  - Pull the image:
+    docker pull 226695652070.dkr.ecr.eu-central-1.amazonaws.com/backendcourse:f54916d949f6295b4a02
+c96f3958322ff358f7f9
+  -
+
 
 
 
