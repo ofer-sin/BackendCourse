@@ -131,7 +131,31 @@ Add relevant targets to Makefile
 - Create ECR (Elastic Container Repository) in AWS
 - Rename ci_go.yml to test.yml
 - Create deploy.yml based on GitHub action Amazon ECR login (in GitHub market place)
-- Create IAM User (Idendity Access Management) in AWS 
+- Create IAM User (Idendity Access Management) in AWS and attach policies for pushing docker images
+
+// 30/31: Create AWS RDS database
+- Create RDS database  (password: 6kL1BNcWxdpOUqzO96MJ)
+- Update the migration targets in Makefile to point to AWS database and run "make migrateup" to populate the tables
+- Change DB_SOURCE env in app.env to point to the AWS database
+- Create a secret in AWS Secret Manager to store the environment valriable of app.env
+  - Create a new token symetric key by: openssl rand -hex 64| head -c 32
+- Run "aws configure" to alow using aws cli commands and take credentials from the AWS github-ci user
+   ~/.aws/credentials and  ~/.aws/config are created
+   Add secret permisions to the AWS Deployment group 
+   To get the secret: aws secretsmanager get-secret-value --secret-id simple_bank
+   To get only the secrte: aws secretsmanager get-secret-value --secret-id simple_bank --query SecretString
+   To get it as jason object instead of a string:
+     aws secretsmanager get-secret-value --secret-id simple_bank --query SecretString --output text
+- Install jq to parse json objects
+- Passing the returned json object to "jq 'to_entries'" will split the json object to an array of {key,value} pairs
+- To get only the keys, pass to: jq 'to_entries|map(.key)'
+- To get array of "key=value", pass to: jq 'to_entries|map("\(.key)=\(.value)")'
+- Get rid of the array, pass to: jq 'to_entries|map("\(.key)=\(.value)")|.[]'
+- And to get rid of the quotes:  jq -r 'to_entries|map("\(.key)=\(.value)")|.[]'
+- Redirect the output tp app.env to populate it with the required setting
+- Add this step to the github workflow deploy.yml
+
+
 
 
 
