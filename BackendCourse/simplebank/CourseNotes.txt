@@ -162,7 +162,24 @@ Add relevant targets to Makefile
   - Pull the image:
     docker pull 226695652070.dkr.ecr.eu-central-1.amazonaws.com/backendcourse:f54916d949f6295b4a02
 c96f3958322ff358f7f9
-  -
+  - Run it with "docker run -p 8080:8080 <image>". Now the AWS hosted database can get requests via localhost:8080
+
+// 32: Create Amazon Elastic Kubernetes Service (EKS)
+- Create and configure EKS cluster
+  - Create the control master node
+  - Add a new Node group
+- Install kubectl
+- Update local kubectl config from the AWS cluster (~/.kube/config):
+   aws eks update-kubeconfig --name simple-bank --region eu-central-1  
+- To get current aws user: aws sts get-caller-identity
+- kubectl usable commsnds:
+  kubectl get pods, kubectl cluster-info, 
+- Add a AWS user profile - github - to ~/.aws/credentials. Setting "export AWS_PROFLE=github" will change the aws user.
+- Create a new folder: eks, with aws-auth.yaml
+  Note: This is deprecated in AWS!! Need to add authentication in an alternative way.
+- Passed the course, too outdated, especially with AWS.
+
+
 
 
 
